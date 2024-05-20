@@ -1,4 +1,5 @@
 import { Header } from "@/components/header";
+import { QueryProvider } from "@/providers/query-provider";
 
 export default function DashboardLayout({
 	children,
@@ -8,7 +9,9 @@ export default function DashboardLayout({
 	return (
 		<>
 			<Header />
-			<main className="px-3 lg:px-14">{children}</main>
+			<main className="px-3 lg:px-14">
+				<QueryProvider>{children}</QueryProvider>
+			</main>
 		</>
 	);
 }

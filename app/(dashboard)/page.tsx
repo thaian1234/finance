@@ -1,10 +1,16 @@
 import { Button } from "@/components/ui/button";
-import { UserButton } from "@clerk/nextjs";
+import { getAccounts } from "@/services/accounts-service";
+import { QueryClient } from "@tanstack/react-query";
 
-export default function HomePage() {
+export default async function HomePage() {
+	const queryClient = new QueryClient();
+	await queryClient.prefetchQuery({
+		queryKey: ["posts"],
+		queryFn: getAccounts,
+	});
+
 	return (
 		<div>
-			<UserButton afterSignOutUrl="/" />
 			<Button>Test</Button>
 		</div>
 	);

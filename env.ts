@@ -4,7 +4,8 @@ import { expand } from "dotenv-expand";
 import { ZodError, z } from "zod";
 
 const EnvSchema = z.object({
-	DATABASE_URL: z.string(),
+	DATABASE_URL: z.string().url(),
+	NEXT_PUBLIC_APP_URL: z.string().url(),
 });
 
 export type EnvSchema = z.infer<typeof EnvSchema>;
