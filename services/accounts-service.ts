@@ -1,13 +1,14 @@
-import { client } from "@/lib/hono";
+import { getClient } from "@/lib/hono";
+import { notFound } from "next/navigation";
+import { cache } from "react";
 
-export async function getAccounts() {
+export const getAccounts = cache(async () => {
+	const client = await getClient();
 	const resp = await client.api.accounts.$get();
 
 	if (!resp.ok) {
-		throw new Error("Failed to fetch accounts");
+		return notFound();
 	}
 
-	const { data } = await resp.json();
-
-	return data;
-}
+	return resp.json();
+});

@@ -5,10 +5,18 @@ import { clerkMiddleware, getAuth } from "@hono/clerk-auth";
 import { eq } from "drizzle-orm";
 import { zValidator } from "@hono/zod-validator";
 import { insertAccountSchema } from "@/db/schema/accounts";
+import { HTTPException } from "hono/http-exception";
+import { currentUser } from "@clerk/nextjs/server";
+import { revalidatePath } from "next/cache";
 
 const app = new Hono()
-	.get("/", clerkMiddleware(), async (c) => {
+	.use("*", clerkMiddleware())
+	.get("/", async (c) => {
 		const auth = getAuth(c);
+		// const authUser = auth();
+		const user = await currentUser();
+
+		console.log(user?.id);
 
 		if (!auth?.userId) {
 			return c.json(
@@ -17,6 +25,7 @@ const app = new Hono()
 				},
 				401
 			);
+			// throw new HTTPException(401, { message: "Unauthorized" });
 		}
 
 		const data = await db
@@ -31,7 +40,6 @@ const app = new Hono()
 	})
 	.post(
 		"/",
-		clerkMiddleware(),
 		zValidator(
 			"json",
 			insertAccountSchema.pick({
@@ -62,4 +70,5 @@ const app = new Hono()
 			return c.json({ data });
 		}
 	);
+
 export default app;

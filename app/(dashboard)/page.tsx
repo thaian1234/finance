@@ -1,17 +1,17 @@
-import { Button } from "@/components/ui/button";
+import { notFound } from "next/navigation";
+import { OpenModal } from "./open";
 import { getAccounts } from "@/services/accounts-service";
-import { QueryClient } from "@tanstack/react-query";
 
 export default async function HomePage() {
-	const queryClient = new QueryClient();
-	await queryClient.prefetchQuery({
-		queryKey: ["posts"],
-		queryFn: getAccounts,
-	});
+	const { data } = await getAccounts();
 
 	return (
 		<div>
-			<Button>Test</Button>
+			{data.map((item) => (
+				<div key={item.id}>{item.name}</div>
+			))}
+			<OpenModal />
+			{/* <AccountData /> */}
 		</div>
 	);
 }
