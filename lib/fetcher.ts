@@ -1,4 +1,3 @@
-import { auth, getAuth } from "@clerk/nextjs/server";
 import { notFound } from "next/navigation";
 import { getToken } from "./getToken";
 
