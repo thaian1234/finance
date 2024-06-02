@@ -2,6 +2,8 @@ import { Header } from "@/components/header";
 
 import { SheetProvider } from "@/providers/sheet-provider";
 
+// export const dynamic = "force-static";
+
 export default function DashboardLayout({
 	children,
 }: Readonly<{

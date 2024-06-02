@@ -14,7 +14,10 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Trash } from "lucide-react";
-import { useCreateAccountV2 } from "../api/use-create-account";
+import { useNewAccount } from "@/hooks/use-new-account";
+import { useServerAction } from "zsa-react";
+import { createAccountAction } from "../api/actions";
+import { toast } from "sonner";
 
 const formSchema = insertAccountSchema.pick({
 	name: true,
@@ -29,7 +32,9 @@ interface AccountFormProps {
 }
 
 export function AccountForm({ defaultValues, id, onDelete }: AccountFormProps) {
-	const { mutation, isPending } = useCreateAccountV2();
+	const onClose = useNewAccount((state) => state.onClose);
+	const { isPending, execute, isError, isSuccess } =
+		useServerAction(createAccountAction);
 
 	const form = useForm<FormValues>({
 		resolver: zodResolver(formSchema),
@@ -37,7 +42,16 @@ export function AccountForm({ defaultValues, id, onDelete }: AccountFormProps) {
 	});
 
 	const handleSubmit = (values: FormValues) => {
-		mutation(values);
+		// mutation(values);
+		execute(values)
+			.then(() => {
+				toast.success("Account created");
+				onClose();
+			})
+			.catch(() => {
+				toast.error("Failed to create account");
+			});
+		// onClose();
 	};
 
 	const handleDelete = () => {

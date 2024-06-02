@@ -8,7 +8,7 @@ export const getToken = cache(async () => {
 	const authToken = await auth().getToken();
 
 	if (!authToken) {
-		redirect("/login");
+		redirect("/sign-in");
 	}
 
 	return authToken;
